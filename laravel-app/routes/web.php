@@ -12,5 +12,8 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
+
+Route::get('/teste', 'InvoiceController@index');
+Route::get('/invoices/loadFromArquivei','InvoiceController@loadInvoicesFromArquivei');
