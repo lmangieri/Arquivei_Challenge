@@ -81,6 +81,14 @@
 
                 <a href="{{ url('/invoices/loadFromArquivei' ) }}" type="button" class="btn btn-success">Carregar Notas Fiscais</a>
 
+                @if(session('loadInvoiceStatus'))
+                    <div class="alert alert-success mg">
+                        <a>Número de notas fiscais carregadas no sistema: {{session('loadInvoiceStatus')['numberOfInvoicesInserted']}}</a>
+                        <br>
+                        <a>Número de notas fiscais que já estavam no sistema e portanto não foram inseridas:
+                            {{session('loadInvoiceStatus')['numberOfNonInvoicesInserted']}} </a>
+                    </div>
+                @endif
             </div>
 
             <div class="content2">
@@ -92,7 +100,18 @@
             </div>
 
             <div class="content2">
-                <button type="button" class="btn btn-success mg">Listar Access Keys</button>
+                <a href="{{ url('/invoices/getAccessKeys' ) }}" class="btn btn-success mg">Listar Access Keys</a>
+                @if(session('access_key_array'))
+                    <div class="alert alert-success mg">
+                        @foreach(session('access_key_array') as $access_key)
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    {{ $access_key->access_key }}
+                                </li>
+                            </ul>
+                        @endforeach
+                    </div>
+                @endif
             </div>
 
         </div>

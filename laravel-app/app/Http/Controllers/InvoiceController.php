@@ -10,7 +10,7 @@ use App\Invoice;
 class InvoiceController extends Controller
 {
     public function index() {
-
+        return view('home');
     }
 
     public function loadInvoicesFromArquivei() {
@@ -28,8 +28,8 @@ class InvoiceController extends Controller
 
         $invoices = array();
 
-        $success = 0;
-        $alreadyExist = 0;
+        $numberOfInvoicesInserted = 0;
+        $numberOfNonInvoicesInserted = 0;
 
         foreach($data->data as $dt) {
             $invoice = new Invoice();
@@ -38,19 +38,28 @@ class InvoiceController extends Controller
             try {
                 $invoice->save();
                 echo 'Success :) <br>';
+                $numberOfInvoicesInserted++;
             } catch (\Illuminate\Database\QueryException $e) {
                 $errorCode = $e->errorInfo[1];
                 echo 'error code ' .$errorCode . '<br>';
                 if($errorCode == 1062){
-                    $alreadyExist++;
+                    $numberOfNonInvoicesInserted++;
                 }
             }
         }
 
-        echo 'success ' . $success.' <br>';
-        echo 'alreadyExist ' . $alreadyExist.' <br>';
+        echo 'success ' . $numberOfInvoicesInserted.' <br>';
+        echo 'alreadyExist ' . $numberOfNonInvoicesInserted.' <br>';
 
-        //print_r($arr['data']);
-        return 123;
+        $loadInvoiceStatus = ['numberOfInvoicesInserted' => $numberOfInvoicesInserted,
+                             'numberOfNonInvoicesInserted' =>$numberOfNonInvoicesInserted ];
+
+        return redirect('/')->with('loadInvoiceStatus',$loadInvoiceStatus);
+    }
+
+    public function getAccessKeys() {
+        $access_key_array = DB::table('invoices')->select('access_key')->get();
+
+        return redirect('/')->with('access_key_array',$access_key_array);
     }
 }
