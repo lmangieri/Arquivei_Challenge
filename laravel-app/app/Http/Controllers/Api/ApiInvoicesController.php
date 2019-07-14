@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Service\InvoicesService;
 
-class InvoiceController extends Controller
+class ApiInvoicesController extends Controller
 {
     private $invoiceService;
 
@@ -13,25 +14,20 @@ class InvoiceController extends Controller
         $this->invoiceService = $invoiceService;
     }
 
-    public function index() {
-        return view('home');
-    }
-
-    public function loadInvoicesFromArquivei() {
+    public function loadInvoicesFromArquivei(Request $request) {
         $loadInvoiceStatus = $this->invoiceService->loadAndSaveInvoicesFromArquivei();
-        return redirect('/')->with('loadInvoiceStatus',$loadInvoiceStatus);
+        return response()->json($loadInvoiceStatus,201);
     }
 
     public function getAccessKeys() {
         $access_key_array = $this->invoiceService->getAccessKeys();
-        return redirect('/')->with('access_key_array',$access_key_array);
+        return response()->json($access_key_array,200);
     }
 
     public function getInvoiceByAccessKey(Request $request) {
         $access_key = $request->input('access_key');
         $decode = $request->input('decode');
         $invoice = $this->invoiceService->getInvoiceByAccessKey($access_key, $decode);
-
-        return redirect('/')->with('invoice',$invoice);
+        return response()->json($invoice,200);
     }
 }
