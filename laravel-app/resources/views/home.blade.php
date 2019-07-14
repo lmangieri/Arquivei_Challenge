@@ -39,13 +39,17 @@
 
             .content2 {
                 text-align: center;
-                /* border: 1px solid black; */
-                margin-bottom: 10px;
-                margin-top: 40px;
-                padding-bottom: 10px;
-                padding-top: 10px;
-               /* background-color:lightgray; */
+                padding-bottom: 30px;
+                padding-top: 30px;
+            }
 
+            .content3 {
+                text-align: center;
+                border: 1px solid black;
+
+                padding-bottom: 30px;
+                padding-top: 30px;
+                background-color:lightgray;
             }
 
             .title {
@@ -70,14 +74,14 @@
 </header>
 
     <body>
-        <div class="container">
+        <div class="container-fluid">
 
-            <div class="content1">
+            <div class="container content2">
                 <h1>Desafio - Arquivei</h1>
                 <h2>Leandro Henrique Mangieri</h2>
             </div>
 
-            <div class="content2">
+            <div class="container content3">
 
                 <a href="{{ url('/invoices/loadFromArquivei' ) }}" type="button" class="btn btn-success">Carregar Notas Fiscais</a>
 
@@ -90,16 +94,38 @@
                     </div>
                 @endif
             </div>
+        </div>
+        <div class="container-fluid">
+            <div class="container content3">
+                {!! Form::open(['url' => '/invoices/getInvoiceByAccessKey']) !!}
+                <div class="form-group">
+                    {{Form::text('access_key','',['class' => 'form-control mg','placeholder' => 'access_key'])}}
 
-            <div class="content2">
-                <form>
-                    <input type="text" class="form-control mg" id="access_key"  placeholder="access_key">
+                </div>
+                <div class="form-group">
+                    {{Form::select('decode', array('decode' => 'Decodificar', 'keep' => 'Manter Codificado'))}}
+                </div>
 
-                    <button type="button" class="btn btn-success mg">Buscar Nota Fiscal</button>
-                </form>
+                {{Form::submit('Buscar Nota Fiscal',['class' => 'btn btn-success mg'])}}
+
+                {!! Form::close() !!}
+                @if(session('invoice'))
+                    <div class="alert alert-success mg">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <span style="width:100%; word-wrap:break-word; display:inline-block;">
+                                {{session('invoice')->xml}}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                @endif
             </div>
+        </div>
 
-            <div class="content2">
+        <div class="container-fluid">
+
+            <div class="container content3">
                 <a href="{{ url('/invoices/getAccessKeys' ) }}" class="btn btn-success mg">Listar Access Keys</a>
                 @if(session('access_key_array'))
                     <div class="alert alert-success mg">

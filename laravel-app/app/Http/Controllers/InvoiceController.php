@@ -62,4 +62,15 @@ class InvoiceController extends Controller
 
         return redirect('/')->with('access_key_array',$access_key_array);
     }
+
+    public function getInvoiceByAccessKey(Request $request) {
+        $invoice = DB::table('invoices')->where('access_key',$request->input('access_key'))->first();
+
+        if ($request->input('decode') == 'decode') {
+            $invoice->xml = base64_decode($invoice->xml);
+        }
+
+        return redirect('/')->with('invoice',$invoice);
+
+    }
 }
