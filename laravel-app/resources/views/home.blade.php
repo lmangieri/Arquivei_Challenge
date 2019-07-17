@@ -120,6 +120,18 @@
                         </ul>
                     </div>
                 @endif
+                @if(session('invoiceNotFound'))
+                    <div class="alert alert-danger mg">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <span style="width:100%; word-wrap:break-word; display:inline-block;">
+                                    Nota fiscal não encontrada !
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                @endif
+
             </div>
         </div>
 

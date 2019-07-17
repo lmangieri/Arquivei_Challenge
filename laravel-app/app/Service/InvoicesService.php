@@ -4,6 +4,7 @@ namespace App\Service;
 use GuzzleHttp\Client;
 use App\Invoice;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Queue\EntityNotFoundException;
 
 class InvoicesService {
 
@@ -16,10 +17,11 @@ class InvoicesService {
 
     public function loadInvoicesFromArquivei(){
         $client = new Client();
-        $res = $client->request('GET', 'https://apiuat.arquivei.com.br/v1/nfe/received', [
-            'headers' => ['Content-Type' => 'application/json',
-                          'x-api-id' => 'e021f345e68de190b17becb313e81f7874479bcb',
-                          'x-api-key' => 'c0d24ab7b6a1732189cabf4d7d4896031c8a25dc']
+        // env('DATABASE_URL')
+        $res = $client->request(env('ARQUIVEI_API_method'), env('ARQUIVEI_API_url'), [
+            'headers' => ['Content-Type' => env('ARQUIVEI_API_content_type'),
+                          'x-api-id' => env('ARQUIVEI_API_id'),
+                          'x-api-key' => env('ARQUIVEI_API_key')]
         ]);
 
         echo $res->getStatusCode();
@@ -62,6 +64,9 @@ class InvoicesService {
 
     public function getInvoiceByAccessKey($access_key, $decode) {
         $invoice = DB::table('invoices')->where('access_key',$access_key)->first();
+        if(!$invoice) {
+            throw new EntityNotFoundException('Invoice',$access_key);
+        }
 
         if ($decode == 'decode') {
             $invoice->xml = base64_decode($invoice->xml);

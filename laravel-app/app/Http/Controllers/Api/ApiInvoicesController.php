@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Service\InvoicesService;
+use Illuminate\Contracts\Queue\EntityNotFoundException;
 
 class ApiInvoicesController extends Controller
 {
@@ -27,7 +28,11 @@ class ApiInvoicesController extends Controller
     public function getInvoiceByAccessKey(Request $request) {
         $access_key = $request->input('access_key');
         $decode = $request->input('decode');
-        $invoice = $this->invoiceService->getInvoiceByAccessKey($access_key, $decode);
+        try {
+            $invoice = $this->invoiceService->getInvoiceByAccessKey($access_key, $decode);
+        } catch (EntityNotFoundException $e) {
+            return response()->json('Entity Not found',400);
+        }
         return response()->json($invoice,200);
     }
 }

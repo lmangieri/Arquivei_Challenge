@@ -13,4 +13,4 @@
 Route::get('/', 'InvoiceController@index');
 Route::get('/invoices/loadFromArquivei','InvoiceController@loadInvoicesFromArquivei');
 Route::get('/invoices/getAccessKeys','InvoiceController@getAccessKeys');
-Route::post('/invoices/getInvoiceByAccessKey','InvoiceController@getInvoiceByAccessKey');;
+Route::post('/invoices/getInvoiceByAccessKey','InvoiceController@getInvoiceByAccessKey');
